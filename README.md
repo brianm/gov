@@ -32,7 +32,7 @@ but lock dependency version for a given top level package. If <code>A -> B
 The normal go commands should pass through, except with fixed
 dependencies, when using gov. That is <code>gov build</code> should
 fix dependency versions, then just run the exact same command but
-<code>s/gov/go/<code> on the command line. We might need a facility
+<code>s/gov/go/</code> on the command line. We might need a facility
 for gov-only flags, but they will then be --gov-foo or such, clearly
 namespace.
 
