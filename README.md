@@ -64,6 +64,7 @@ gov <task> [options]
 tasks:
     sync     ensure correct version of all dependencies
     get      "go get ./..." + "gov sync"
+    build    "gov get" + "go build"
     release  The Magic Starts Here
     check    Fast verification of dependency goodness
 ```
