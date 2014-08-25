@@ -55,3 +55,17 @@ correct (all dependencies vendored).
 Furthermore, we should support building rpm or deb bundles, probably
 via a Makefile dropped in the the source package, so that the deb or
 rpm is built exactly from the source bundle.
+
+# Usage #
+
+```
+gov <task> [options]
+
+tasks:
+    sync     ensure correct version of all dependencies
+    get      "go get ./..." + "gov sync"
+    release  The Magic Starts Here
+    check    Fast verification of dependency goodness
+```
+
+
