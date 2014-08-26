@@ -1,7 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/brianm/gov/vcs"
+)
 
 func main() {
-	fmt.Printf("Hello, world!\n")
+	rs, err := vcs.FindRepos("./example")
+	if err != nil {
+		panic(err)
+	}
+
+	for _, r := range rs {
+		fmt.Printf("  %v\n", r)
+	}
 }
