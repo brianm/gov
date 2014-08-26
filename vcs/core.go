@@ -18,15 +18,16 @@ func findAllImports(pkg *build.Package, seen map[string]*build.Package) error {
 
 	seen[pkg.Dir] = pkg
 	for _, imp := range pkg.Imports {
-		if imp != "C" {
-			cp, err := build.Import(imp, pkg.Dir, 0)
-			if err != nil {
-				return err
-			}
-			err = findAllImports(cp, seen)
-			if err != nil {
-				return err
-			}
+		if imp == "C" {
+			continue
+		}
+		cp, err := build.Import(imp, pkg.Dir, 0)
+		if err != nil {
+			return err
+		}
+		err = findAllImports(cp, seen)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
