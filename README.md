@@ -24,8 +24,8 @@ everything, you just lack control over it!
 If we are in a one-GOPATH world, and we want specific version of
 dependencies, we should fix dependencies for the thing being built.
 This means that we don't do recursive dependency version resolution,
-but lock dependency version for a given top level package. If <code>A -> B
--> C</code> then A needs to specify the versions of both B and C.
+but lock dependency version for a given top level package. If <code>A
+-> B -> C</code> then A needs to specify the versions of both B and C.
 
 ## Pass Through Commands ##
 
