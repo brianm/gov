@@ -3,7 +3,7 @@ package vcs
 import (
 	"fmt"
 	"go/build"
-	"strings"
+	"os"
 )
 
 type Repo struct {
@@ -66,13 +66,65 @@ func FindRepos(from string) ([]Repo, error) {
 	return rs, nil
 }
 
+type VcsType int
+
+const (
+	None VcsType = iota
+	Git
+	Unknown
+)
+
+func (v VcsType) String() string {
+	switch v {
+	case None:
+		return "None"
+	case Git:
+		return "Git"
+	case Unknown:
+		return "Unknown"
+	default:
+		return "really unknown!"
+	}
+}
+
+func findVcsType(dir string) (VcsType, error) {
+
+	ctx := build.Default
+
+	if ctx.IsDir(fmt.Sprintf("%s/.git")) {
+
+	}
+	// git test
+	git_dir := fmt.Sprintf("%s/.git", dir)
+	fmt.Printf("testing %s\n", git_dir)
+	fi, err := os.Stat(git_dir)
+	if err != nil {
+		return Unknown, err
+	}
+	if fi.IsDir() {
+		return Git, nil
+	}
+
+	// recur!
+
+	return Unknown, nil
+}
+
 func findRepo(pkg *build.Package) (Repo, error) {
 
-	if strings.HasPrefix(pkg.ImportPath, "github.com/brianm/a") {
-		// special case right now until I get vcs detection
-		// this just allows the multiple import de-dupe to be
-		// tested
-		return Repo{"github.com/brianm/a"}, nil
+	dir := pkg.Dir
+
+	vctype, err := findVcsType(dir)
+	if err != nil {
+		return Repo{dir}, err
 	}
-	return Repo{pkg.Dir}, nil
+	fmt.Printf("%v\n", vctype)
+
+	//if strings.HasPrefix(pkg.ImportPath, "github.com/brianm/a") {
+	// special case right now until I get vcs detection
+	// this just allows the multiple import de-dupe to be
+	// tested
+	//return Repo{"github.com/brianm/a"}, nil
+	//}
+	return Repo{dir}, nil
 }
