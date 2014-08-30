@@ -4,10 +4,19 @@ import (
 	"fmt"
 	"go/build"
 	"os"
+	"path/filepath"
 )
 
-type Repo struct {
-	Root string
+type Repo interface {
+	Root() string
+}
+
+type GitRepo struct {
+	root string
+}
+
+func (g GitRepo) Root() string {
+	return g.root
 }
 
 func findAllImports(pkg *build.Package, seen map[string]*build.Package) error {
@@ -50,11 +59,11 @@ func FindRepos(from string) ([]Repo, error) {
 	for _, val := range imports {
 		if !val.Goroot {
 			//fmt.Printf("pkg\t%s -> %v\n", val.ImportPath, val.Dir)
-			repo, err := findRepo(val)
+			repo, err := FindRepo(val)
 			if err != nil {
 				return nil, err
 			}
-			repos[repo.Root] = repo
+			repos[repo.Root()] = repo
 		}
 	}
 
@@ -66,65 +75,32 @@ func FindRepos(from string) ([]Repo, error) {
 	return rs, nil
 }
 
-type VcsType int
-
-const (
-	None VcsType = iota
-	Git
-	Unknown
-)
-
-func (v VcsType) String() string {
-	switch v {
-	case None:
-		return "None"
-	case Git:
-		return "Git"
-	case Unknown:
-		return "Unknown"
-	default:
-		return "really unknown!"
-	}
-}
-
-func findVcsType(dir string) (VcsType, error) {
-
-	ctx := build.Default
-
-	if ctx.IsDir(fmt.Sprintf("%s/.git")) {
-
-	}
-	// git test
+func isGit(dir string) bool {
 	git_dir := fmt.Sprintf("%s/.git", dir)
-	fmt.Printf("testing %s\n", git_dir)
 	fi, err := os.Stat(git_dir)
 	if err != nil {
-		return Unknown, err
+		if os.IsNotExist(err) {
+			return false
+		}
 	}
 	if fi.IsDir() {
-		return Git, nil
+		return true
 	}
+	return false
 
-	// recur!
-
-	return Unknown, nil
 }
 
-func findRepo(pkg *build.Package) (Repo, error) {
-
-	dir := pkg.Dir
-
-	vctype, err := findVcsType(dir)
-	if err != nil {
-		return Repo{dir}, err
+func findRepoForPath(dir string) (Repo, error) {
+	if filepath.Clean(dir) == "/" {
+		return nil, fmt.Errorf("No repo found")
 	}
-	fmt.Printf("%v\n", vctype)
+	if isGit(dir) {
+		return GitRepo{dir}, nil
+	}
+	parent, _ := filepath.Split(dir)
+	return findRepoForPath(parent)
+}
 
-	//if strings.HasPrefix(pkg.ImportPath, "github.com/brianm/a") {
-	// special case right now until I get vcs detection
-	// this just allows the multiple import de-dupe to be
-	// tested
-	//return Repo{"github.com/brianm/a"}, nil
-	//}
-	return Repo{dir}, nil
+func FindRepo(pkg *build.Package) (Repo, error) {
+	return findRepoForPath(pkg.Dir)
 }
