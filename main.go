@@ -14,6 +14,10 @@ func main() {
 	}
 
 	for _, r := range rs {
-		fmt.Printf("  %v\n", r)
+		clean, err := r.IsClean()
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Printf("%t  %v\n", clean, r)
 	}
 }
