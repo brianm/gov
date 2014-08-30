@@ -18,6 +18,11 @@ func main() {
 		if err != nil {
 			log.Println(err)
 		}
-		fmt.Printf("%t  %v\n", clean, r)
+		rev, err := r.Rev()
+		if err != nil {
+			log.Println(err)
+		}
+
+		fmt.Printf("%s\t%t\t%v\n", rev, clean, r)
 	}
 }
