@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"github.com/brianm/gov/vcs"
 	"log"
+	"os"
 )
 
 func main() {
-	rs, err := vcs.FindRepos("./example")
+	if len(os.Args) < 2 {
+		log.Fatalf("please pass path on command line")
+	}
+	path := os.Args[1]
+	rs, err := vcs.FindRepos(path)
 	if err != nil {
 		log.Fatalf("error finding repos: %s", err)
 		panic(err)
