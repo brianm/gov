@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/brianm/gov/vcs"
 	"log"
@@ -8,10 +9,20 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatalf("please pass path on command line")
+	var path string
+	var err error
+
+	flag.Parse()
+
+	if len(flag.Args()) < 1 {
+		path, err = os.Getwd()
+		if err != nil {
+			log.Fatalf("Unable to get current directory: %s", err)
+		}
+	} else {
+		path = flag.Arg(0)
 	}
-	path := os.Args[1]
+
 	rs, err := vcs.FindRepos(path)
 	if err != nil {
 		log.Fatalf("error finding repos: %s", err)
