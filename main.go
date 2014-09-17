@@ -55,11 +55,9 @@ func report(ctx *cli.Context) {
 			log.Println(err)
 		}
 
-		var state string
+		state := "dirty"
 		if clean {
 			state = "clean"
-		} else {
-			state = "dirty"
 		}
 		fmt.Printf("%s\t%s\t%v\n", rev, state, r)
 	}
