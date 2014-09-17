@@ -1,26 +1,42 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/brianm/gov/vcs"
+	"github.com/codegangsta/cli"
 	"log"
 	"os"
 )
 
 func main() {
+
+	app := cli.NewApp()
+	app.Name = "gov"
+	app.Usage = "gov <command>"
+	app.EnableBashCompletion = true
+	app.Commands = []cli.Command{
+		{
+			Name:      "report",
+			ShortName: "r",
+			Usage:     "Report on repos used",
+			Action:    report,
+		},
+	}
+
+	app.Run(os.Args)
+}
+
+func report(ctx *cli.Context) {
 	var path string
 	var err error
 
-	flag.Parse()
-
-	if len(flag.Args()) < 1 {
+	if len(ctx.Args()) < 1 {
 		path, err = os.Getwd()
 		if err != nil {
 			log.Fatalf("Unable to get current directory: %s", err)
 		}
 	} else {
-		path = flag.Arg(0)
+		path = ctx.Args()[0]
 	}
 
 	rs, err := vcs.FindRepos(path)
@@ -39,6 +55,12 @@ func main() {
 			log.Println(err)
 		}
 
-		fmt.Printf("%s\t%t\t%v\n", rev, clean, r)
+		var state string
+		if clean {
+			state = "clean"
+		} else {
+			state = "dirty"
+		}
+		fmt.Printf("%s\t%s\t%v\n", rev, state, r)
 	}
 }
