@@ -22,7 +22,7 @@ func main() {
 		},
 		{
 			Name:   "bash-autocomplete",
-			Usage:  "Use as 'eval \"$(gov autocomplete)\"' to set up bash autocompletion",
+			Usage:  "Use as 'eval \"$(gov bash-autocomplete)\"' to set up bash autocompletion",
 			Action: autocomplete,
 		},
 	}
@@ -43,6 +43,7 @@ _gov_bash_autocomplete() {
      return 0
 } 
 complete -F _gov_bash_autocomplete gov
+
 `)
 }
 
