@@ -10,7 +10,6 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	//app.Name = "gov"
 	app.Usage = "manage golang build dependencies"
 	app.EnableBashCompletion = true
 	app.Version = "0.0.1"
