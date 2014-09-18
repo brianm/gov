@@ -4,14 +4,13 @@
 package vcs
 
 import (
+	_ "bitbucket.org/xnio/govdep2"
 	_ "github.com/brianm/govdep1"
-	_ "github.com/brianm/govdep2"
 	"go/build"
 	"testing"
 )
 
-var govdep1 *build.Package
-var govdep2 *build.Package
+var govdep1, govdep2 *build.Package
 
 func init() {
 	var err error
@@ -20,7 +19,7 @@ func init() {
 		panic(err)
 	}
 
-	govdep2, err = build.Import("github.com/brianm/govdep2", ".", 0)
+	govdep2, err = build.Import("bitbucket.org/xnio/govdep2", ".", 0)
 	if err != nil {
 		panic(err)
 	}
