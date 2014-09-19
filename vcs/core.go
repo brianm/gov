@@ -83,7 +83,7 @@ func isGit(dir string) bool {
 
 }
 
-func findRepoForPath(dir string) (Repo, error) {
+func FindRepoForPath(dir string) (Repo, error) {
 	if filepath.Clean(dir) == "/" {
 		return nil, fmt.Errorf("No repo found")
 	}
@@ -91,9 +91,9 @@ func findRepoForPath(dir string) (Repo, error) {
 		return GitRepo{dir}, nil
 	}
 	parent, _ := filepath.Split(dir)
-	return findRepoForPath(filepath.Clean(parent))
+	return FindRepoForPath(filepath.Clean(parent))
 }
 
 func FindRepo(pkg *build.Package) (Repo, error) {
-	return findRepoForPath(pkg.Dir)
+	return FindRepoForPath(pkg.Dir)
 }

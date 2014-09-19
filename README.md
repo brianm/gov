@@ -68,5 +68,3 @@ tasks:
     release  The Magic Starts Here
     check    Fast verification of dependency goodness
 ```
-
-

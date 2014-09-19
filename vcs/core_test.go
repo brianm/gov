@@ -16,7 +16,7 @@ func TestFindRepos(t *testing.T) {
 	}
 
 	repos, err := FindRepos(example.Dir)
-	if len(repos) != 1 {
+	if len(repos) != 2 {
 		t.Errorf("expected one dependency, found %d", len(repos))
 		for _, r := range repos {
 			t.Logf("found repo: %s", r)
