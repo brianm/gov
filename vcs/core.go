@@ -92,7 +92,7 @@ func findRepoForPath(dir string) (Repo, error) {
 		return GitRepo{dir}, nil
 	}
 	parent, _ := filepath.Split(dir)
-	return findRepoForPath(parent)
+	return findRepoForPath(filepath.Clean(parent))
 }
 
 func FindRepo(pkg *build.Package) (Repo, error) {
