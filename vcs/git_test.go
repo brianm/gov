@@ -7,6 +7,8 @@ import (
 	_ "bitbucket.org/xnio/govdep2"
 	_ "github.com/brianm/govdep1"
 	"go/build"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -38,19 +40,27 @@ func TestGovDep1IsClean(t *testing.T) {
 	g := GitRepo{govdep1.Dir}
 	clean, err := g.IsClean()
 	if err != nil {
-		t.Error(err)
+		t.Errorf("Unable to look for clean state of %s: %s", govdep1.Dir, err)
 	}
 	if !clean {
-		t.Errorf("govdep1 is dirty")
+		t.Fatalf("%s should have been clean!", govdep1.Dir)
 	}
 }
 
 func TestMakeGovDep1Dirty(t *testing.T) {
-	// g := GitRepo{govdep1.Dir}
+	tmp := filepath.Join(govdep1.Dir, "TestMakeGovDep1Dirty")
+	_, err := os.Create(tmp)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(tmp)
 
-	// touch a file in govdep1
-
-	// defer a call to cleanup the file we touched
-
-	// assert that govdep1 repo is dirty
+	g := GitRepo{govdep1.Dir}
+	clean, err := g.IsClean()
+	if err != nil {
+		t.Errorf("Unable to look for clean state of %s: %s", govdep1.Dir, err)
+	}
+	if clean {
+		t.Fatalf("%s should have been dirty!", govdep1.Dir)
+	}
 }
