@@ -2,6 +2,7 @@ package plan
 
 import (
 	"go/build"
+	"path/filepath"
 	"testing"
 )
 
@@ -27,5 +28,15 @@ func TestCreatePlanExcludesSelfRepo(t *testing.T) {
 		for _, r := range repos {
 			t.Logf("found repo: %s", r)
 		}
+	}
+}
+
+func TestTargetRepoFound(t *testing.T) {
+	plan, err := CreatePlanFor(example.Dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if filepath.Join(plan.TargetRepo.Root(), "example") != example.Dir {
+		t.Fatalf("example repo not found correctly!")
 	}
 }
