@@ -52,7 +52,6 @@ func FindRepos(from string) ([]Repo, error) {
 	repos := make(map[string]Repo)
 	for _, val := range imports {
 		if !val.Goroot {
-			//fmt.Printf("pkg\t%s -> %v\n", val.ImportPath, val.Dir)
 			repo, err := FindRepo(val)
 			if err != nil {
 				return nil, err
