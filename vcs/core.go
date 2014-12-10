@@ -84,14 +84,15 @@ func isGit(dir string) bool {
 }
 
 func FindRepoForPath(dir string) (Repo, error) {
-	if filepath.Clean(dir) == "/" {
+	dir = filepath.Clean(dir)
+	if dir == "/" {
 		return nil, fmt.Errorf("No repo found")
 	}
 	if isGit(dir) {
 		return CreateGitRepo(dir)
 	}
 	parent, _ := filepath.Split(dir)
-	return FindRepoForPath(filepath.Clean(parent))
+	return FindRepoForPath(parent)
 }
 
 func FindRepo(pkg *build.Package) (Repo, error) {

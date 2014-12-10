@@ -6,6 +6,7 @@ import (
 	"github.com/codegangsta/cli"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -67,13 +68,8 @@ func report(ctx *cli.Context) {
 	}
 
 	for _, r := range rs {
-		clean := r.IsClean()
-		rev := r.Rev()
-
-		state := "dirty"
-		if clean {
-			state = "clean"
+		if filepath.Clean(path) != filepath.Clean(r.Root()) {
+			fmt.Printf("%s\t%t\t%v\n", r.Rev(), r.IsClean(), r.Root())
 		}
-		fmt.Printf("%s\t%s\t%v\n", rev, state, r)
 	}
 }

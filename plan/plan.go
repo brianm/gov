@@ -34,9 +34,3 @@ func CreatePlanFor(path string) (Plan, error) {
 
 	return plan, nil
 }
-
-func (p Plan) RecordTo(w io.Writer) error {
-	for _, r := range p.DependentRepos {
-		w.WriteString(fmt.Sprintf("%s\t%s\n", r.Root(), r.Rev()))
-	}
-}
