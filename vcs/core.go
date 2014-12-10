@@ -9,8 +9,8 @@ import (
 
 type Repo interface {
 	Root() string
-	IsClean() (bool, error)
-	Rev() (string, error)
+	IsClean() bool
+	Rev() string
 }
 
 func findAllImports(pkg *build.Package, seen map[string]*build.Package) error {
@@ -88,7 +88,7 @@ func FindRepoForPath(dir string) (Repo, error) {
 		return nil, fmt.Errorf("No repo found")
 	}
 	if isGit(dir) {
-		return GitRepo{dir}, nil
+		return CreateGitRepo(dir)
 	}
 	parent, _ := filepath.Split(dir)
 	return FindRepoForPath(filepath.Clean(parent))

@@ -37,11 +37,11 @@ func TestSetup(t *testing.T) {
 }
 
 func TestGovDep1IsClean(t *testing.T) {
-	g := GitRepo{govdep1.Dir}
-	clean, err := g.IsClean()
+	g, err := CreateGitRepo(govdep1.Dir)
 	if err != nil {
-		t.Errorf("Unable to look for clean state of %s: %s", govdep1.Dir, err)
+		t.Fatalf("error creating repo: %s", err)
 	}
+	clean := g.IsClean()
 	if !clean {
 		t.Fatalf("%s should have been clean!", govdep1.Dir)
 	}
@@ -55,12 +55,23 @@ func TestMakeGovDep1Dirty(t *testing.T) {
 	}
 	defer os.Remove(tmp)
 
-	g := GitRepo{govdep1.Dir}
-	clean, err := g.IsClean()
+	g, err := CreateGitRepo(govdep1.Dir)
 	if err != nil {
-		t.Errorf("Unable to look for clean state of %s: %s", govdep1.Dir, err)
+		t.Fatalf("error creating repo: %s", err)
 	}
+	clean := g.IsClean()
 	if clean {
 		t.Fatalf("%s should have been dirty!", govdep1.Dir)
+	}
+}
+
+func TestRevReported(t *testing.T) {
+	g, err := CreateGitRepo(govdep1.Dir)
+	rev := g.Rev()
+	if err != nil {
+		t.Error(err)
+	}
+	if rev != "master" {
+		t.Fatalf("expected rev='master', got rev='%s'", rev)
 	}
 }
