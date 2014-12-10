@@ -67,14 +67,8 @@ func report(ctx *cli.Context) {
 	}
 
 	for _, r := range rs {
-		clean, err := r.IsClean()
-		if err != nil {
-			log.Println(err)
-		}
-		rev, err := r.Rev()
-		if err != nil {
-			log.Println(err)
-		}
+		clean := r.IsClean()
+		rev := r.Rev()
 
 		state := "dirty"
 		if clean {
