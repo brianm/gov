@@ -12,7 +12,7 @@ type gitRepo struct {
 	rev   string
 }
 
-func CreateGitRepo(path string) (Repo, error) {
+func CreateGitRepo(path string) (Dependency, error) {
 	r := gitRepo{}
 
 	// IsClean

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-type Repo interface {
+type Dependency interface {
 	Root() string
 	IsClean() bool
 	Rev() string
@@ -36,7 +36,7 @@ func findAllImports(pkg *build.Package, seen map[string]*build.Package) error {
 	return nil
 }
 
-func FindRepos(from string) ([]Repo, error) {
+func FindRepos(from string) ([]Dependency, error) {
 	pkg, err := build.ImportDir(from, 0)
 	if err != nil {
 		return nil, fmt.Errorf("unable to load package at %s: %s", from, err)
@@ -49,7 +49,7 @@ func FindRepos(from string) ([]Repo, error) {
 	}
 	delete(imports, pkg.Dir)
 
-	repos := make(map[string]Repo)
+	repos := make(map[string]Dependency)
 	for _, val := range imports {
 		if !val.Goroot {
 			repo, err := FindRepo(val)
@@ -60,7 +60,7 @@ func FindRepos(from string) ([]Repo, error) {
 		}
 	}
 
-	rs := make([]Repo, 0, 0)
+	rs := make([]Dependency, 0, 0)
 	for _, val := range repos {
 		rs = append(rs, val)
 	}
@@ -83,7 +83,7 @@ func isGit(dir string) bool {
 
 }
 
-func FindRepoForPath(dir string) (Repo, error) {
+func FindRepoForPath(dir string) (Dependency, error) {
 	dir = filepath.Clean(dir)
 	if dir == "/" {
 		return nil, fmt.Errorf("No repo found")
@@ -95,6 +95,6 @@ func FindRepoForPath(dir string) (Repo, error) {
 	return FindRepoForPath(parent)
 }
 
-func FindRepo(pkg *build.Package) (Repo, error) {
+func FindRepo(pkg *build.Package) (Dependency, error) {
 	return FindRepoForPath(pkg.Dir)
 }

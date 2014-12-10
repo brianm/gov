@@ -6,8 +6,8 @@ import (
 )
 
 type Plan struct {
-	TargetRepo     vcs.Repo
-	DependentRepos []vcs.Repo
+	TargetRepo     vcs.Dependency
+	DependentRepos []vcs.Dependency
 }
 
 func CreatePlanFor(path string) (Plan, error) {
@@ -24,7 +24,7 @@ func CreatePlanFor(path string) (Plan, error) {
 		return plan, fmt.Errorf("no repos for %s: %s", path, err)
 	}
 
-	plan.DependentRepos = make([]vcs.Repo, 0)
+	plan.DependentRepos = make([]vcs.Dependency, 0)
 	for _, r := range repos {
 		if tr.Root() != r.Root() {
 			// exclude self repo
