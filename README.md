@@ -44,7 +44,22 @@ time, make it easy to fix the build. People will work ahead of their
 frozen dependencies, so make it trivial to recur through the build and
 find what has been added, then add it.
 
-## Release is First Class ##
+# Usage #
+
+```
+gov <task> [options]
+
+tasks:
+    sync     ensure correct version of all dependencies
+    get      "go get ./..." + "gov sync"
+    build    "gov get" + "go build"
+    check    Fast verification of dependency goodness
+```
+
+
+# Ideas to consider (but which I am not convinced of yet) #
+
+## Release as First Class Thing ##
 
 Releases are things. When <code>gov release</code> is run, it handles
 tagging, merge to <code>go1</code> release 1.0.0 and later, and
@@ -55,16 +70,3 @@ correct (all dependencies vendored).
 Furthermore, we should support building rpm or deb bundles, probably
 via a Makefile dropped in the the source package, so that the deb or
 rpm is built exactly from the source bundle.
-
-# Usage #
-
-```
-gov <task> [options]
-
-tasks:
-    sync     ensure correct version of all dependencies
-    get      "go get ./..." + "gov sync"
-    build    "gov get" + "go build"
-    release  The Magic Starts Here
-    check    Fast verification of dependency goodness
-```
